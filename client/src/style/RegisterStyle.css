@@ -1,0 +1,13 @@
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+}
+
+.card {
+    border: 2px solid gray;
+    padding: 30px;
+    width: 400px;
+}
