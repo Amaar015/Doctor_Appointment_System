@@ -4,7 +4,7 @@ import Layout from '../componets/Layout';
 const HomePage = () => {
     const getUserData = async () => {
         try {
-            const res = await axios.port('/api/v1/use/getUserData', {}, {
+            const res = await axios.port('/api/v1/use/setUserData', {}, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('token')
                 }

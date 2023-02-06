@@ -14,11 +14,14 @@ const Login = () => {
         try {
             dispatch(showLoading());
             const res = await axios.post('/api/v1/user/login', values);
+            window.location.reload();
             dispatch(hideLoading());
             if (res.data.success) {
                 localStorage.setItem('token', res.data.token)
                 message.success('Login successfuly');
                 navigate('/')
+            } else {
+                message.error(res.data.message)
             }
         } catch (error) {
             dispatch(hideLoading());
