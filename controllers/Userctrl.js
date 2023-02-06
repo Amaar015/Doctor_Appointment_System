@@ -27,11 +27,11 @@ const LoginController = async (req, res) => {
     try {
         const user = await userModel.findOne({ email: req.body.email });
         if (!user) {
-            res.status(200).send({ message: 'User not found', success: false })
+            return res.status(200).send({ message: 'User not found', success: false })
         }
         const isMatch = await bcrypt.compare(req.body.password, user.password);
         if (!isMatch) {
-            res.status(200).send({ message: `Invalid Email or Password! please try again`, success: false })
+            return res.status(200).send({ message: `Invalid Email or Password! please try again`, success: false })
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.status(200).send({ message: "Login succesfully", success: true, token });
@@ -46,19 +46,18 @@ const LoginController = async (req, res) => {
 // 
 const AuthController = async (req, res) => {
     try {
-        const user = await userModel.findOne({ _id: req.body.useId });
+        const user = await userModel.findOne({ _id: req.body.userId });
+        user.password = undefined;
         if (!user) {
-            res.status(401).send({
+            return res.status(401).send({
                 message: "User not found",
                 success: false,
             })
         } else {
+
             res.status(201).send({
                 success: true,
-                data: {
-                    name: user.name,
-                    email: user.email,
-                },
+                data: user,
             })
         }
     } catch (error) {
