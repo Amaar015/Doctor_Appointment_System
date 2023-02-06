@@ -13,6 +13,6 @@ router.post('/login', LoginController);
 router.post('/register', RegisterController);
 
 // Home // Auth
-router.post('/getUserData', authMidleware, AuthController);
+router.post('/setUserData', authMidleware, AuthController);
 
 module.exports = router;
