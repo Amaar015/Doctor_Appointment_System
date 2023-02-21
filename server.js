@@ -11,7 +11,7 @@ app.use(morgan('dev'));
 
 
 app.use('/api/v1/user', require('./routes/userRoute'))
-
+app.use('/api/v1/admin', require('./routes/AdminRoute'))
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
     console.log(`Server is listening from the ${process.env.NODE_MODE} mode on ${process.env.PORT}`.bgCyan.white);
