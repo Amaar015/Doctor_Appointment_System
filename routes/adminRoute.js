@@ -1,5 +1,6 @@
 const express = require('express');
-const { getAllDoctorController, getAllUserController } = require('../controllers/Adminctrl');
+const { getAllDoctorController, getAllUserController,
+    changeAccountStatusController } = require('../controllers/Adminctrl');
 const authMidleware = require('../midlewares/authMidleware');
 
 const router = express.Router()
@@ -11,5 +12,8 @@ router.get('/getAllUser', authMidleware, getAllUserController);
 
 router.get('/getAllDocter', authMidleware, getAllDoctorController);
 
+// post methode set the status
+
+router.post('/changeAccounStatus', authMidleware, changeAccountStatusController)
 
 module.exports = router;
