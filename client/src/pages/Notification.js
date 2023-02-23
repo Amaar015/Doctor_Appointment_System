@@ -21,6 +21,7 @@ const Notification = () => {
             dispatch(hideLoading())
             if (res.data.success) {
                 message.success(res.data.success);
+                window.location.reload();
             } else {
                 dispatch(hideLoading());
                 message.error(res.data.succes)
@@ -46,6 +47,7 @@ const Notification = () => {
             dispatch(hideLoading());
             if (res.data.success) {
                 message.success(res.data.message);
+                window.location.reload();
             }
             else {
                 dispatch(hideLoading());

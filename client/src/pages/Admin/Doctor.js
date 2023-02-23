@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../../componets/Layout'
 import axios from 'axios'
 import { genComponentStyleHook } from 'antd/es/theme/internal';
-import { Table } from 'antd';
+import { message, Table } from 'antd';
 const Doctor = () => {
     const [doctors, setDoctror] = useState([]);
     const getDoctor = async () => {
@@ -20,6 +20,25 @@ const Doctor = () => {
             console.log(error)
         }
     }
+    // handle account status
+
+    const handleAccountStatus = async (record, status) => {
+        try {
+            const res = await axios.post('/api/v1/admin/changeAccounStatus',
+                { doctorId: record._id, userId: record.userId, status: status },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+            if (res.data.success) {
+                message.success(res.data.message)
+                window.location.reload();
+            }
+        } catch (error) {
+            message.error('Something went Wrong')
+        }
+    }
     useEffect(() => {
         getDoctor()
     }, [])
@@ -27,26 +46,33 @@ const Doctor = () => {
     const columns = [
         {
             title: "Name",
-            dataIndex: "firstName",
+            dataIndex: "name",
+            render: (text, record) => (
+                <span>{record.firstName} {record.lastName}</span>
+            )
 
         },
+        {
+            title: "Status",
+            dataIndex: "status",
+        },
+
         {
             title: "Email",
             dataIndex: 'email',
         },
         {
-            title: "doctor",
-            dataIndex: "isDoctor",
-            render: (text, record) => (
-                <span>{record.isDoctor ? "yes" : "no"}</span>
-            )
+            title: "Phone",
+            dataIndex: "phone"
         },
+
         {
             title: "Actions",
             dataIndex: "actions",
-            render: (text, recode) => (
+            render: (text, record) => (
                 <div className="d-flex">
-                    <button className="btn btn-danger">Block</button>
+                    {record.status === 'Pending' ? <button className="btn btn-success" onClick={() => handleAccountStatus(record, 'approved')}>Approve</button> :
+                        <button className="btn btn-danger">Reject</button>}
                 </div>
             )
         }

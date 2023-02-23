@@ -10,7 +10,7 @@ import axios from 'axios';
 const ApplyDoc = () => {
     const { user } = useSelector(state => state.user);
     const navigate = useNavigate();
-    const dispatch = useNavigate();
+    const dispatch = useDispatch();
     const handlefinish = async (values) => {
 
         try {
