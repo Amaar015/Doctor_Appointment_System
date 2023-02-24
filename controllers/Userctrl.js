@@ -2,7 +2,6 @@
 const bcrypt = require('bcryptjs');
 const userModel = require('../models/userModel');
 const jwt = require('jsonwebtoken')
-const doctorModle = require('../models/docModels');
 const doctorModel = require('../models/docModels');
 // Register user
 const RegisterController = async (req, res) => {
@@ -149,8 +148,27 @@ const DeleteAllNotificationController = async (req, res) => {
         })
     }
 }
+
+// get doctors controller
+const getAllDoctorsController = async (req, res) => {
+    try {
+        const doctor = await doctorModel.find({ status: 'approved' })
+        res.status(201).send({
+            success: true,
+            message: "Doctors list fetched successfuly",
+            data: doctor
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(501).send({
+            success: false,
+            message: "Error while Fetching Doctor",
+            error,
+        })
+    }
+}
 module.exports = {
     LoginController, RegisterController, AuthController,
     applyDoctorController, getAllNotificationController,
-    DeleteAllNotificationController
+    DeleteAllNotificationController, getAllDoctorsController
 }

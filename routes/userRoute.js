@@ -1,7 +1,7 @@
 const express = require('express');
 const { LoginController, RegisterController, AuthController, applyDoctorController,
     getAllNotificationController,
-    DeleteAllNotificationController }
+    DeleteAllNotificationController, getAllDoctorsController }
     = require('../controllers/Userctrl');
 const authMidleware = require('../midlewares/authMidleware');
 
@@ -27,5 +27,9 @@ router.post('/get-all-notification', authMidleware, getAllNotificationController
 
 //Delete all notification // Auth
 router.post('/delete-all-notification', authMidleware, DeleteAllNotificationController);
+
+// Get All doctors List
+
+router.get('/getAllDoctors', authMidleware, getAllDoctorsController)
 
 module.exports = router;
