@@ -62,9 +62,7 @@ const ApplyDoc = () => {
                             <Input type='text' placeholder='Address' required />
                         </FormItem>
                     </Col>
-                </Row>
-                <h4 className='text-dark'>Professional Details</h4>
-                <Row gutter={20}>
+
                     <Col xs={25} md={24} lg={8}>
                         <FormItem label="Specialization" name="specialization" required>
                             <Input type='text' placeholder='Enter Specialization' required />

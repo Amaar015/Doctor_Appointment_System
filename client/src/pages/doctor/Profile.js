@@ -3,21 +3,21 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import Layout from '../../componets/Layout';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
-
+import { useParams, useNavigate } from 'react-router-dom';
+import moment from 'moment'
 import { Col, Form, Row, Input, TimePicker, message } from "antd"
 import FormItem from 'antd/es/form/FormItem'
-import { useNavigate } from 'react-router-dom'
 import { showLoading, hideLoading } from '../../Redux/features/alertSlice'
 
 const Profile = () => {
     const { user } = useSelector(state => state.user)
     const [doctor, setDoctor] = useState(null)
+    console.log(doctor)
     const navigate = useNavigate();
     const dispatch = useDispatch();
     // get doctor details
     const params = useParams();
-    const getDoctorinfo = async () => {
+    const getDoctorInfo = async () => {
         try {
             const res = await axios.post('/api/v1/doctor/getDoctorInfo',
                 { userId: params.id },
@@ -36,15 +36,22 @@ const Profile = () => {
     }
 
     useEffect(() => {
-        getDoctorinfo()
-    }, [])
+        getDoctorInfo()
+    })
 
     // handle form data
     const handlefinish = async (values) => {
 
         try {
             dispatch(showLoading());
-            const res = await axios.post('/api/v1/doctor//updateProfile', { ...values, userId: user._id },
+            const res = await axios.post('/api/v1/doctor/updateProfile',
+                {
+                    ...values, userId: user._id,
+                    timeings: [
+                        moment(values.timeings[0]).format("HH:mm"),
+                        moment(values.timeings[1]).format("HH:mm")
+                    ]
+                },
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -52,11 +59,11 @@ const Profile = () => {
                 })
             dispatch(hideLoading());
             if (res.data.success) {
-                message.success(res.data.success)
+                message.success(res.data.message)
                 navigate('/')
             }
             else {
-                message.error(res.data.success)
+                message.error(res.data.message)
             }
 
         } catch (error) {
@@ -69,9 +76,18 @@ const Profile = () => {
         <Layout>
             <h3 className='text-center m-2'>Manage Profile</h3>
             {doctor && (
-                <Form onFinish={handlefinish} className='m-4' initialValues={doctor}>
+                <Form onFinish={handlefinish} className='m-4' initialValues={
+                    {
+                        ...doctor,
+                        timeings: [
+                            moment(doctor.timeings[0]).format("HH:mm"),
+                            moment(doctor.timeings[1]).format("HH:mm")
+
+                        ]
+                    }
+                } >
                     <h4 className='text-dark'>personal Details</h4>
-                    <Row gutter={20} >
+                    <Row gutter={20}  >
                         <Col xs={25} md={24} lg={8} >
                             <FormItem label="Fisrt Name" name="firstName" required>
                                 <Input type='text' placeholder='first Name' required />
@@ -92,9 +108,7 @@ const Profile = () => {
                                 <Input type='text' placeholder='Address' required />
                             </FormItem>
                         </Col>
-                    </Row>
-                    <h4 className='text-dark'>Professional Details</h4>
-                    <Row gutter={20}>
+
                         <Col xs={25} md={24} lg={8}>
                             <FormItem label="Specialization" name="specialization" required>
                                 <Input type='text' placeholder='Enter Specialization' required />
@@ -118,7 +132,7 @@ const Profile = () => {
                     </Row>
                 </Form>
             )}
-        </Layout>
+        </Layout >
     )
 }
 

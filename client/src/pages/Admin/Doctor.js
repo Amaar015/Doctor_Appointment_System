@@ -20,6 +20,10 @@ const Doctor = () => {
             console.log(error)
         }
     }
+    useEffect(() => {
+        getDoctor()
+    }, [])
+
     // handle account status
 
     const handleAccountStatus = async (record, status) => {
@@ -39,9 +43,6 @@ const Doctor = () => {
             message.error('Something went Wrong')
         }
     }
-    useEffect(() => {
-        getDoctor()
-    }, [])
 
     const columns = [
         {
