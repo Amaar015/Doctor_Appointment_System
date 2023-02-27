@@ -119,9 +119,9 @@ const Profile = () => {
                             <FormItem label="Fees per Consultant" name="fees" required>
                                 <Input type='text' placeholder='Fees per Consultant' required />
                             </FormItem>
-                            <FormItem label="Timings" name="timeings" required>
+                            {/* <FormItem label="Timings" name="timeings" required>
                                 <TimePicker.RangePicker format="HH:mm" />
-                            </FormItem>
+                            </FormItem> */}
 
                         </Col>
                         <Col xs={25} md={24} lg={8}></Col>
