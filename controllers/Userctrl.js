@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const userModel = require('../models/userModel');
 const jwt = require('jsonwebtoken')
 const doctorModel = require('../models/docModels');
+const appointmentModel = require('../models/appointmentModel')
 // Register user
 const RegisterController = async (req, res) => {
     try {
@@ -32,7 +33,10 @@ const LoginController = async (req, res) => {
         }
         const isMatch = await bcrypt.compare(req.body.password, user.password);
         if (!isMatch) {
-            return res.status(200).send({ message: `Invalid Email or Password! please try again`, success: false })
+            return res.status(200).send({
+                message: `Invalid Email or Password! please try again`,
+                success: false
+            })
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.status(200).send({ message: "Login succesfully", success: true, token });
@@ -167,8 +171,36 @@ const getAllDoctorsController = async (req, res) => {
         })
     }
 }
+
+// Book Appointment 
+const bookappointmentController = async (req, res) => {
+    try {
+        req.body.status = 'pending'
+        const newAppointment = new appointmentModel(req.body);
+        await newAppointment.save();
+        const user = await userModel.findOne({ _id: req.body.userId })
+        user.notification.push({
+            type: "New Appointment-request",
+            message: `A new Appointment-request from ${req.body.userInfo.name}`,
+            onClickPath: '/user/appointments',
+        })
+        await user.save();
+        res.status(201).send({
+            success: true,
+            message: "Appointment booked successfully",
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(501).send({
+            success: false,
+            message: "Error During appointment",
+            error,
+        })
+    }
+}
 module.exports = {
     LoginController, RegisterController, AuthController,
     applyDoctorController, getAllNotificationController,
-    DeleteAllNotificationController, getAllDoctorsController
+    DeleteAllNotificationController, getAllDoctorsController,
+    bookappointmentController,
 }
